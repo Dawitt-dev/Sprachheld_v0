@@ -1,0 +1,4 @@
+{
+    "mongoURI": "mongodb://localhost:27017/sprachheld",
+    "jwtSecret": "3Jd4$3s)$hec-amd3@#"
+  }
