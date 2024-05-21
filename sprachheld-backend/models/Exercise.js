@@ -13,7 +13,17 @@ const ExerciseSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  createdAt: {
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category',
+    required: true,
+  },
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },  
+  date: {
     type: Date,
     default: Date.now,
   },
