@@ -1,7 +1,7 @@
 
 sprachheld-backend# SprachHeld - Fun German Grammar Mastery 🇩🇪
 
-![SprachHeld Logo](:)
+![SprachHeld Logo](https://www.canva.com/design/DAGF0Jgtxhs/NHj_8gB42Ro8qQrIKTY29g/edit?utm_content=DAGF0Jgtxhs&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
 ## Introduction
 SprachHeld is an interactive language learning application designed to make learning German grammar fun and engaging. Whether you're a beginner or looking to improve your language skills, SprachHeld offers a range of interactive challenges and gamification elements to enhance your learning experience.
