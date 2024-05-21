@@ -5,21 +5,37 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../../models/User');
 const config = require('config'); 
+const { check, validationResult } = require('express-validator');
+//const auth = require('../../middleware/auth');
+
 // @route  POST /api/auth
 // @desc   Authenticate user & get token
-router.post('/', async (req, res) => {
-  const { email, password } = req.body;
+// @access Public
+router.post(
+  '/',
+  [
+    check('email', 'Please include a valid email').isEmail(),
+    check('password', 'Password is required').exists(),
+  ], 
+  async (req, res) => {
+    const { email, password } = req.body;
+    console.log(`Email: ${email}, Password: ${password}`); // Debugging
 
-  try {
-    // Check if user exists
-    let user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ errors: [{ msg: 'Invalid credentials' }] });
+    try {
+      // Check if user exists
+      let user = await User.findOne({ email });
+      if (!user) {
+        console.log('User not found'); // Debugging
+        return res.status(400).json({ errors: [{ msg: 'Invalid credentials' }] });
     }
 
     // Check if password matches
-    const isMatch = await bcrypt.compare(password, user.password);
+    console.log(`Stored Hashed Password: ${user.password}`); // Debugging
+    const isMatch = bcrypt.compareSync(password, user.password);
+    console.log(`Password Match: ${isMatch}`); // Debugging
+
     if (!isMatch) {
+      console.log('Password does not match'); // Debugging
       return res.status(400).json({ errors: [{ msg: 'Invalid credentials' }] });
     }
 

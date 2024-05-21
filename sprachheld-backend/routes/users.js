@@ -9,6 +9,8 @@ const config = require('config');
 
 // @route  POST /api/users
 // @desc   Register user
+// @access Public
+
 router.post('/', [
   check('name', 'Name is required').not().isEmpty(),
   check('email', 'Please include a valid email').isEmail(),
@@ -33,10 +35,15 @@ router.post('/', [
       password
     });
 
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(password, salt);
+    //saving the user
     await user.save();
 
+    /**
+     * Payload object containing user information.
+     * @typedef {Object} Payload
+     * @property {Object} user - User object.
+     * @property {string} user.id - User ID.
+     */
     const payload = {
       user: {
         id: user.id
