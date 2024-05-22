@@ -2,12 +2,14 @@ const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
 const Category = require('../models/Category');
+const auth = require('../middleware/auth');
 
 // @route    POST /api/categories
 // @desc     Create a category
-// @access   Public (for now)
+// @access   Private
 router.post(
     '/',
+    auth,
     [
         check('name', 'Name is required').not().isEmpty(),
         check('description', 'Description is required').not().isEmpty(),
@@ -69,8 +71,8 @@ router.get('/:id', async (req, res) => {
 
 // @route    PUT /api/categories/:id
 // @desc     Update category by ID
-// @access   Public (for now)
-router.put('/:id', async (req, res) => {
+// @access   Private
+router.put('/:id', auth, async (req, res) => {
     const { name, description } = req.body;
     const categoryFields = {};
     if (name) categoryFields.name = name;
@@ -94,8 +96,8 @@ router.put('/:id', async (req, res) => {
 
 // @route    DELETE /api/categories/:id
 // @desc     Delete category by ID
-// @access   Public (for now)
-router.delete('/:id', async (req, res) => {
+// @access   Private
+router.delete('/:id', auth, async (req, res) => {
     try {
         const category = await Category.findById(req.params.id);
         if (!category) {

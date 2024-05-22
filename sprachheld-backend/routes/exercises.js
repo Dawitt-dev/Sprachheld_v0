@@ -2,12 +2,14 @@ const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
 const Exercise = require('../models/Exercise');
+const auth = require('../middleware/auth');
 
 // @route    POST api/exercises
 // @desc     Create an exercise
-// @access   Public (for now)
+// @access   Private
 router.post(
   '/',
+  auth,
   [
     check('title', 'Title is required').not().isEmpty(),
     check('description', 'Description is required').not().isEmpty(),
@@ -81,8 +83,8 @@ router.get('/:id', async (req, res) => {
 
 // @route    PUT /api/exercises/:id
 // @desc     Update an exercise
-// @access   Public (for now)
-router.put('/:id', async (req, res) => {
+// @access   private
+router.put('/:id', auth, async (req, res) => {
   const { title, description, difficulty, category } = req.body;
 
   // Build exercise object
@@ -113,9 +115,9 @@ router.put('/:id', async (req, res) => {
 
 // @route    DELETE /api/exercises/:id
 // @desc     Delete an exercise
-// @access   Public (for now)
+// @access   private
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
     try {
         const exercise = await Exercise.findById(req.params.id);
     
