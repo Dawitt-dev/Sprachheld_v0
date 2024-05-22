@@ -14,7 +14,11 @@ app.use(express.json({ extended: false }));
 // Define Routes
 app.use('/api/users', require('./routes/users'));
 app.use('/api/auth', require('./routes/api/auth'));
-app.use('/api/protected', require('./routes/api/protected')); 
+app.use('/api/protected', require('./routes/api/protected'));
+app.use('/api/exercises', require('./routes/exercises'));
+app.use('/api/categories', require('./routes/categories'));
+app.use('/api/userExercises', require('./routes/userExercises'));
+
 
 // Start server
 const PORT = process.env.PORT || 5000;

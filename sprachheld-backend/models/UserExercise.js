@@ -14,7 +14,7 @@ const UserExerciseSchema = new mongoose.Schema({
     status: {
         type: String,
         required: true,
-        enum: ['completed', 'in progress', 'not started'],
+        enum: ['completed', 'in-progress', 'not started'],
         default: 'not started',
     },
     date: {
