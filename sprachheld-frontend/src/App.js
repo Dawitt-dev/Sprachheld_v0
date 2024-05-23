@@ -1,17 +1,16 @@
 // frontend/src/App.js
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Register from './components/Register';
-import Login from './components/Login';
+import UserExercises from './components/UserExercises';
+import TrackExercise from './components/TrackExercise';
+
+
 
 const App = () => {
   return (
-    <Router>
-      <Switch>
-        <Route path="/register" component={Register} />
-        <Route path="/login" component={Login} />
-      </Switch>
-    </Router>
+    <div>
+      <UserExercises />
+      <TrackExercise exerciseId="664df8285b580fb81963d8f4" />
+    </div>
   );
 };
 
