@@ -3,13 +3,23 @@ const db = config.get('mongoURI');
 const express = require('express');
 const connectDB = require('./db');
 const mongoose = require('mongoose');
+const c = require('config');
 const app = express();
+const cors = require('cors');
+
 
 // Connect to MongoDB
 connectDB();
 
 // Middleware
 app.use(express.json({ extended: false }));
+app.use(cors({
+    origin: 'https://fuzzy-pancake-r9j76g9vp6x2xg7v-3000.app.github.dev', // Frontend URL
+    credentials: true,
+}));
+
+
+
 
 // Define Routes
 app.use('/api/users', require('./routes/users'));

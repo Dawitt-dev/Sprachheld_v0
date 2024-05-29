@@ -26,8 +26,7 @@ router.post(
 
             if (userExercise) {
                 userExercise.status = status;
-                userExercise = status;
-                userExercise = Date.now();
+                userExercise.date = Date.now();
                 await userExercise.save();
                 return res.json(userExercise);
             }

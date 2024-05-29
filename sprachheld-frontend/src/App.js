@@ -1,15 +1,24 @@
-// frontend/src/App.js
 import React from 'react';
-import UserExercises from './components/UserExercises';
-import TrackExercise from './components/TrackExercise';
-
-
+import { Outlet, Link } from 'react-router-dom';
 
 const App = () => {
   return (
     <div>
-      <UserExercises />
-      <TrackExercise exerciseId="664df8285b580fb81963d8f4" />
+      <header>
+        <nav>
+          <ul>
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/login">Login</Link></li>
+            <li><Link to="/register">Register</Link></li>
+          </ul>
+        </nav>
+      </header>
+      <main>
+        <Outlet /> {/* This will render the matched child route's component */}
+      </main>
+      <footer>
+        <p>&copy; 2024 Sprachheld. All rights reserved.</p>
+      </footer>
     </div>
   );
 };
