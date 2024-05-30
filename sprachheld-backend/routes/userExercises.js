@@ -48,11 +48,16 @@ router.post(
 );
 
 // @route    GET /api/userExercises
-// @desc     Get all user exercises for the logged-in user
-// @access   Private
-router.get('/', auth, async (req, res) => {
+// @desc     Get all user exercises or filter by user ID
+// @access   Public
+router.get('/', async (req, res) => {
+    const { userId } = req.query;
+    const query = userId ? { userId } : {};
+
     try {
-        const userExercises = await UserExercise.find({ userId: req.user.id }).populate('exerciseId', ['title']);
+        const userExercises = await UserExercise.find(query)
+            .populate('userId', ['name'])
+            .populate('exerciseId', ['title']);
         res.json(userExercises);
     } catch (err) {
         console.error(err.message);

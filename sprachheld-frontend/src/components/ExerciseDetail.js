@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from '../axiosConfig';
-import { useParams } from 'react-router-dom';
 import { AuthContext } from '../AuthContext';
 
 const ExerciseDetail = () => {
@@ -10,8 +10,14 @@ const ExerciseDetail = () => {
     const [answers, setAnswers] = useState({});
     const [feedback, setFeedback] = useState({});
     const [message, setMessage] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
+        if (!user) {
+            navigate('/login');
+            return;
+        }
+
         const fetchExercise = async () => {
             try {
                 const res = await axios.get(`/exercises/${id}`);
@@ -23,7 +29,7 @@ const ExerciseDetail = () => {
             }
         };
         fetchExercise();
-    }, [id]);
+    }, [id, user, navigate]);
 
     const fetchSavedAnswers = async (exerciseId) => {
         try {
@@ -38,10 +44,23 @@ const ExerciseDetail = () => {
     };
 
     const handleChange = (questionId, value) => {
-        setAnswers({
-            ...answers,
-            [questionId]: value,
+        setAnswers(prevAnswers => {
+            const newAnswers = { ...prevAnswers, [questionId]: value };
+            saveProgress(newAnswers);
+            return newAnswers;
         });
+    };
+
+    const saveProgress = async (newAnswers) => {
+        try {
+            await axios.post(`/userExercises/${id}/save`, {
+                userId: user._id,
+                exerciseId: id,
+                answers: newAnswers,
+            });
+        } catch (err) {
+            console.error('Error saving progress', err);
+        }
     };
 
     const handleSubmit = async () => {
@@ -68,24 +87,10 @@ const ExerciseDetail = () => {
         }
     };
 
-    const saveProgress = async () => {
-        try {
-            await axios.post(`/userExercises/${id}/save`, {
-                userId: user.id,
-                exerciseId: id,
-                answers,
-            });
-        } catch (err) {
-            console.error('Error saving progress', err);
-        }
-    };
-
     const updateExerciseStatus = async (status) => {
-        if (!user) return;
-
         try {
             await axios.post(`/exercises/${id}/submit`, {
-                userId: user.id,
+                userId: user._id,
                 exerciseId: id,
                 status,
             });

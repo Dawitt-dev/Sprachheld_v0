@@ -19,7 +19,7 @@ const UserExercises = () => {
 
     return (
         <div>
-            <h2>User Exercises</h2>
+            <h2>My Exercises</h2>
             <ul>
                 {exercises.map((exercise) => (
                     <li key={exercise._id}>{exercise.exerciseId ? exercise.exerciseId.title : 'N/A'} - {exercise.status}</li>

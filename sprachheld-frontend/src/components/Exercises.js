@@ -1,13 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from '../axiosConfig';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../AuthContext';
 
 const Exercises = () => {
+    const { user } = useContext(AuthContext);
     const [exercises, setExercises] = useState([]);
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
+      if (!user) {
+          navigate('/login');
+          return;
+      }
         const fetchExercises = async () => {
             try {
                 const res = await axios.get('/exercises');
@@ -28,7 +36,7 @@ const Exercises = () => {
 
         fetchCategories();
         fetchExercises();
-    }, []);
+    }, [user, navigate]);
 
     const handleCategoryChange = (e) => {
         setSelectedCategory(e.target.value);
