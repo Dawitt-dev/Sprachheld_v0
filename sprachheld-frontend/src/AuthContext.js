@@ -31,7 +31,7 @@ const AuthProvider = ({ children }) => {
             const response = await axios.post('/auth', { email, password });
             localStorage.setItem('token', response.data.token);
             setUser(response.data.user);
-            navigate('/user-exercises');
+            navigate('/profile');
         } catch (error) {
             console.error('Error logging in', error);
             console.error('Error logging in', error.response ? error.response.data : error); // Debugging

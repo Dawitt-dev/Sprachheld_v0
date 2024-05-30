@@ -17,7 +17,7 @@ const Login = () => {
         console.log('Login form data:', formData); // Debugging
         try {
             await login(formData.email, formData.password);
-            navigate('/user-exercises');
+            navigate('/profile');
         } catch (err) {
             setMessage('Login failed');
             console.error('Error logging in', err);
