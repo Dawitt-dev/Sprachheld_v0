@@ -10,10 +10,11 @@ const App = () => {
       <header>
         <nav>
           <ul>
-            <li><Link to="/">Home</Link></li>
+            {user &&<li><Link to="/">Home</Link></li>}
             {!user && <li><Link to="/login">Login</Link></li>}
             {!user && <li><Link to="/register">Register</Link></li>}
             {user && <li><Link to="/exercises">Exercises</Link></li>}
+            {user && <li><Link to="/profile">Profile</Link></li>}
             {user && <li><button onClick={logout}>Logout</button></li>}
           </ul>
         </nav>

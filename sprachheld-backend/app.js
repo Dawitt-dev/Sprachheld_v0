@@ -24,6 +24,7 @@ app.use(cors({
 // Define Routes
 app.use('/api/users', require('./routes/users'));
 app.use('/api/auth', require('./routes/api/auth'));
+app.use('/api/profile', require('./routes/profile'));
 app.use('/api/protected', require('./routes/api/protected'));
 app.use('/api/exercises', require('./routes/exercises'));
 app.use('/api/categories', require('./routes/categories'));
