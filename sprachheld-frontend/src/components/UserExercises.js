@@ -7,7 +7,7 @@ const UserExercises = () => {
     useEffect(() => {
         const fetchExercises = async () => {
             try {
-                const res = await axios.get('/userExercises:userId');
+                const res = await axios.get('/userExercises');
                 setExercises(res.data);
             }   catch (err) {
                 console.error('Error fetching exercises', err);

@@ -7,6 +7,7 @@ const axiosInstance = axios.create({
 // Interceptor to include token in headers
 axiosInstance.interceptors.request.use((config) => {
     const token = localStorage.getItem('token');
+    console.log("Interceptor adding token:", token);
     if (token) {
         config.headers['x-auth-token'] = token; // Assuming token is stored in local storage
     }

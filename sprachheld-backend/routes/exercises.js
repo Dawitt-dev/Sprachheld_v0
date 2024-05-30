@@ -9,13 +9,12 @@ const auth = require('../middleware/auth');
 // @access   Private
 router.post(
   '/',
-  auth,
   [
+    auth,
     check('title', 'Title is required').not().isEmpty(),
     check('description', 'Description is required').not().isEmpty(),
     check('difficulty', 'Difficulty is required').not().isEmpty(),
     check('category', 'Category is required').not().isEmpty(),
-    check('createdBy', 'User is required').not().isEmpty(),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -23,7 +22,7 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { title, description, difficulty, category, createdBy } = req.body;
+    const { title, description, difficulty, category } = req.body;
 
     try {
       const newExercise = new Exercise({
@@ -31,7 +30,7 @@ router.post(
         description,
         difficulty,
         category,
-        createdBy,
+        createdBy: req.user.id,
       });
 
       const exercise = await newExercise.save();
@@ -55,7 +54,6 @@ router.get('/', async (req, res) => {
     console.error(err.message);
     res.status(500).send('Server Error');
   }
-
 });
 
 // @route    GET /api/exercises/:id
@@ -83,7 +81,7 @@ router.get('/:id', async (req, res) => {
 
 // @route    PUT /api/exercises/:id
 // @desc     Update an exercise
-// @access   private
+// @access   Private
 router.put('/:id', auth, async (req, res) => {
   const { title, description, difficulty, category } = req.body;
 
@@ -98,7 +96,7 @@ router.put('/:id', auth, async (req, res) => {
     let exercise = await Exercise.findById(req.params.id);
 
     if (!exercise) {
-         return res.status(404).json({ msg: 'Exercise not found' });
+      return res.status(404).json({ msg: 'Exercise not found' });
     }
     exercise = await Exercise.findByIdAndUpdate(
       req.params.id,
@@ -115,26 +113,41 @@ router.put('/:id', auth, async (req, res) => {
 
 // @route    DELETE /api/exercises/:id
 // @desc     Delete an exercise
-// @access   private
-
+// @access   Private
 router.delete('/:id', auth, async (req, res) => {
-    try {
-        const exercise = await Exercise.findById(req.params.id);
-    
-        if (!exercise) {
-        return res.status(404).json({ msg: 'Exercise not found' });
-        }
-    
-        await Exercise.findByIdAndDelete(req.params.id);
-    
-        res.json({ msg: 'Exercise removed' });
-    } catch (err) {
-        console.error(err.message);
-        if (err.kind === 'ObjectId') {
-            return res.status(404).json({ msg: 'Exercise not found' });
-        }
-        res.status(500).send('Server Error');
+  try {
+    const exercise = await Exercise.findById(req.params.id);
+
+    if (!exercise) {
+      return res.status(404).json({ msg: 'Exercise not found' });
     }
+
+    await Exercise.findByIdAndDelete(req.params.id);
+
+    res.json({ msg: 'Exercise removed' });
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({ msg: 'Exercise not found' });
+    }
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route    POST /api/exercises/:id/submit
+// @desc     Submit exercise answers
+// @access   Private
+router.post('/:id/submit', auth, async (req, res) => {
+  const { answers } = req.body;
+  console.log('Submitting exercise answers:', { userId: req.user.id, exerciseId: req.params.id, answers });
+
+  try {
+    // Process the answers here
+    res.json({ message: 'Exercise submitted successfully' });
+  } catch (err) {
+    console.error('Error processing submission:', err.message);
+    res.status(500).send('Server Error');
+  }
 });
 
 module.exports = router;

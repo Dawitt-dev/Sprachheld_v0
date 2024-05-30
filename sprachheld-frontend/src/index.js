@@ -7,6 +7,8 @@ import Register from './components/Register';
 import Login from './components/Login';
 import ProtectedRoute from './components/ProtectedRoute';
 import UserExercises from './components/UserExercises';
+import Exercises from './components/Exercises';
+import ExerciseDetail from './components/ExerciseDetail'
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import { AuthProvider } from './AuthContext';
@@ -21,6 +23,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
             <Route path="user-exercises" element={<ProtectedRoute><UserExercises /></ProtectedRoute>} />
+            <Route path="exercises" element={<Exercises />} /> 
+            <Route path="exercises/:id" element={<ExerciseDetail />} />
             <Route path="*" element={<div>404 Not Found</div>} />
           </Route>
         </Routes>

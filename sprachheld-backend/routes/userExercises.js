@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
 const UserExercise = require('../models/UserExercise');
+const auth = require('../middleware/auth');
 
 // @route    POST /api/userExercises
 // @desc     Create or Update a user exercise
@@ -47,11 +48,11 @@ router.post(
 );
 
 // @route    GET /api/userExercises
-// @desc     Get all user exercises
-// @access   Public
-router.get('/', async (req, res) => {
+// @desc     Get all user exercises for the logged-in user
+// @access   Private
+router.get('/', auth, async (req, res) => {
     try {
-        const userExercises = await UserExercise.find().populate('userId', ['name']).populate('exerciseId', ['title']);
+        const userExercises = await UserExercise.find({ userId: req.user.id }).populate('exerciseId', ['title']);
         res.json(userExercises);
     } catch (err) {
         console.error(err.message);
