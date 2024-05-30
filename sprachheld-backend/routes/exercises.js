@@ -150,4 +150,36 @@ router.post('/:id/submit', auth, async (req, res) => {
   }
 });
 
+// @route    POST /api/exercises/:id/submit
+// @desc     Submit an exercise as completed
+// @access   Private
+router.post('/:id/submit', auth, async (req, res) => {
+  const { userId, exerciseId, status } = req.body;
+
+  console.log('User ID:', userId); // Debugging
+  console.log('Exercise ID:', exerciseId); // Debugging
+  console.log('Status:', status); // Debugging
+
+  try {
+      let userExercise = await UserExercise.findOne({ userId, exerciseId });
+
+      if (userExercise) {
+          userExercise.status = status;
+          await userExercise.save();
+      } else {
+          userExercise = new UserExercise({
+              userId,
+              exerciseId,
+              status,
+          });
+          await userExercise.save();
+      }
+
+      res.json(userExercise);
+  } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+  }
+});
+
 module.exports = router;
