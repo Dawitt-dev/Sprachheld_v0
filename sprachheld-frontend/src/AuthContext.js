@@ -4,9 +4,10 @@ import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext();
 
-const AuthProvider = ({ children, navigate }) => {
+const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -30,6 +31,7 @@ const AuthProvider = ({ children, navigate }) => {
             const response = await axios.post('/auth', { email, password });
             localStorage.setItem('token', response.data.token);
             setUser(response.data.user);
+            navigate('/user-exercises');
         } catch (error) {
             console.error('Error logging in', error);
             console.error('Error logging in', error.response ? error.response.data : error); // Debugging

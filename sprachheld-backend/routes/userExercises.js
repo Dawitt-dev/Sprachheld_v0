@@ -49,8 +49,8 @@ router.post(
 
 // @route    GET /api/userExercises
 // @desc     Get all user exercises or filter by user ID
-// @access   Public
-router.get('/', async (req, res) => {
+// @access   Private
+router.get('/', auth, async (req, res) => {
     const { userId } = req.query;
     const query = userId ? { userId } : {};
 
@@ -68,7 +68,7 @@ router.get('/', async (req, res) => {
 // @route    GET /api/userExercises/:id
 // @desc     Get user exercise by ID
 // @access   Public
-router.get('/:id', async (req, res) => {
+router.get('/:id', auth, async (req, res) => {
     try {
         const userExercise = await UserExercise.findById(req.params.id).populate('userId', ['name']).populate('exerciseId', ['title']);
 
@@ -81,6 +81,25 @@ router.get('/:id', async (req, res) => {
         if (err.kind === 'ObjectId') {
             return res.status(404).json({ msg: 'User Exercise not found' });
         }
+        res.status(500).send('Server Error');
+    }
+});
+
+// @route    GET /api/userExercises/:exerciseId/:userId
+// @desc     Get exercise progress for a user
+// @access   Private
+router.get('/:exerciseId/:userId', auth, async (req, res) => {
+    try {
+        const { exerciseId, userId } = req.params;
+        const userExercise = await UserExercise.findOne({ exerciseId, userId });
+
+        if (!userExercise) {
+            return res.status(404).json({ msg: 'Progress not found' });
+        }
+
+        res.json(userExercise);
+    } catch (err) {
+        console.error(err.message);
         res.status(500).send('Server Error');
     }
 });

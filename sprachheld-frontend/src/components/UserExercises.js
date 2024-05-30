@@ -1,21 +1,29 @@
-import React, { useEffect, useState} from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import axios from '../axiosConfig';
+import { AuthContext } from '../AuthContext';
 
 const UserExercises = () => {
+    const { user } = useContext(AuthContext);
     const [exercises, setExercises] = useState([]);
 
     useEffect(() => {
         const fetchExercises = async () => {
             try {
-                const res = await axios.get('/userExercises');
+                const res = await axios.get('/userExercises', {
+                    params: {
+                        userId: user._id,
+                    },
+                });
                 setExercises(res.data);
             }   catch (err) {
                 console.error('Error fetching exercises', err);
             }
         };
 
-        fetchExercises();
-    }, []);
+        if (user) {
+            fetchExercises();
+        }
+    }, [user]);
 
     return (
         <div>

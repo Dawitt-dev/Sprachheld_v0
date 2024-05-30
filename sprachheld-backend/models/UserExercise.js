@@ -24,7 +24,7 @@ const UserExerciseSchema = new mongoose.Schema({
     answers: {
         type: Map,
         of: String,
-    }
+    },
     date: {
         type: Date,
         default: Date.now,
