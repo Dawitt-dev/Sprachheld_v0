@@ -1,16 +1,20 @@
 import React from 'react';
 import { Outlet, Link } from 'react-router-dom';
+import { AuthContext } from './AuthContext';
 
 const App = () => {
+  const { user, logout } = React.useContext(AuthContext);
+
   return (
     <div>
       <header>
         <nav>
           <ul>
             <li><Link to="/">Home</Link></li>
-            <li><Link to="/login">Login</Link></li>
-            <li><Link to="/register">Register</Link></li>
-            <li><Link to="/exercises">Exercises</Link></li>
+            {!user && <li><Link to="/login">Login</Link></li>}
+            {!user && <li><Link to="/register">Register</Link></li>}
+            {user && <li><Link to="/exercises">Exercises</Link></li>}
+            {user && <li><button onClick={logout}>Logout</button></li>}
           </ul>
         </nav>
       </header>
