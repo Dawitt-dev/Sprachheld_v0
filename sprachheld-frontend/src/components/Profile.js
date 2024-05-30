@@ -1,44 +1,43 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { AuthContext } from '../AuthContext';
+import React, { useEffect, useState, useContext } from 'react';
 import axios from '../axiosConfig';
+import { AuthContext } from '../AuthContext';
 
 const Profile = () => {
     const { user } = useContext(AuthContext);
-    const [profile, setProfile] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [exercises, setExercises] = useState([]);
 
     useEffect(() => {
-        const fetchProfile = async () => {
+        const fetchUserExercises = async () => {
+            if (!user) return; // Ensure the user is logged in
+
             try {
-                const res = await axios.get('/profile');
-                setProfile(res.data);
+                const res = await axios.get('/userExercises');
+                setExercises(res.data.filter(exercise => exercise.userId === user.id));
             } catch (err) {
-                console.error('Error fetching profile', err);
-            } finally {
-                setLoading(false);
+                console.error('Error fetching user exercises', err);
             }
         };
 
-        fetchProfile();
-    }, []);
-
-    if (loading) return <div>Loading...</div>;
+        fetchUserExercises();
+    }, [user]);
 
     return (
         <div>
-            <h1>User Profile</h1>
-            {profile && (
+            <h2>User Profile</h2>
+            {user && (
                 <div>
-                    <p>Name: {profile.name}</p>
-                    <p>Email: {profile.email}</p>
-                    <h2>My Exercises</h2>
-                    <ul>
-                        {profile.completedExercises.map((exercise) => (
-                            <li key={exercise._id}>{exercise.title}</li>
-                        ))}
-                    </ul>
+                    <p>Name: {user.name}</p>
+                    <p>Email: {user.email}</p>
                 </div>
             )}
+            <h3>My Exercises</h3>
+            <ul>
+                {exercises.map((exercise) => (
+                    <li key={exercise._id}>
+                        {exercise.exerciseId.title} - {exercise.status}
+                    </li>
+                ))}
+            </ul>
         </div>
     );
 };

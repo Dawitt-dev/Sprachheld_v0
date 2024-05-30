@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
 const Exercise = require('../models/Exercise');
+const UserExercise = require('../models/UserExercise');
 const auth = require('../middleware/auth');
 
 // @route    POST api/exercises
@@ -10,11 +11,11 @@ const auth = require('../middleware/auth');
 router.post(
   '/',
   [
-    auth,
     check('title', 'Title is required').not().isEmpty(),
     check('description', 'Description is required').not().isEmpty(),
     check('difficulty', 'Difficulty is required').not().isEmpty(),
     check('category', 'Category is required').not().isEmpty(),
+    check('createdBy', 'User is required').not().isEmpty(),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -22,7 +23,7 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { title, description, difficulty, category } = req.body;
+    const { title, description, difficulty, category, createdBy } = req.body;
 
     try {
       const newExercise = new Exercise({
@@ -30,7 +31,7 @@ router.post(
         description,
         difficulty,
         category,
-        createdBy: req.user.id,
+        createdBy,
       });
 
       const exercise = await newExercise.save();
@@ -98,6 +99,7 @@ router.put('/:id', auth, async (req, res) => {
     if (!exercise) {
       return res.status(404).json({ msg: 'Exercise not found' });
     }
+
     exercise = await Exercise.findByIdAndUpdate(
       req.params.id,
       { $set: exerciseFields },
@@ -135,22 +137,6 @@ router.delete('/:id', auth, async (req, res) => {
 });
 
 // @route    POST /api/exercises/:id/submit
-// @desc     Submit exercise answers
-// @access   Private
-router.post('/:id/submit', auth, async (req, res) => {
-  const { answers } = req.body;
-  console.log('Submitting exercise answers:', { userId: req.user.id, exerciseId: req.params.id, answers });
-
-  try {
-    // Process the answers here
-    res.json({ message: 'Exercise submitted successfully' });
-  } catch (err) {
-    console.error('Error processing submission:', err.message);
-    res.status(500).send('Server Error');
-  }
-});
-
-// @route    POST /api/exercises/:id/submit
 // @desc     Submit an exercise as completed
 // @access   Private
 router.post('/:id/submit', auth, async (req, res) => {
@@ -161,24 +147,24 @@ router.post('/:id/submit', auth, async (req, res) => {
   console.log('Status:', status); // Debugging
 
   try {
-      let userExercise = await UserExercise.findOne({ userId, exerciseId });
+    let userExercise = await UserExercise.findOne({ userId, exerciseId });
 
-      if (userExercise) {
-          userExercise.status = status;
-          await userExercise.save();
-      } else {
-          userExercise = new UserExercise({
-              userId,
-              exerciseId,
-              status,
-          });
-          await userExercise.save();
-      }
+    if (userExercise) {
+      userExercise.status = status;
+      await userExercise.save();
+    } else {
+      userExercise = new UserExercise({
+        userId,
+        exerciseId,
+        status,
+      });
+      await userExercise.save();
+    }
 
-      res.json(userExercise);
+    res.json(userExercise);
   } catch (err) {
-      console.error(err.message);
-      res.status(500).send('Server Error');
+    console.error(err.message);
+    res.status(500).send('Server Error');
   }
 });
 

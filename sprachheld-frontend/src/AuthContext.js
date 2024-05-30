@@ -28,7 +28,7 @@ const AuthProvider = ({ children }) => {
         try {
             const response = await axios.post('/auth', { email, password });
             localStorage.setItem('token', response.data.token);
-            setUser(response.data);
+            setUser(response.data.user);
         } catch (error) {
             console.error('Error logging in', error);
             console.error('Error logging in', error.response ? error.response.data : error); // Debugging

@@ -56,6 +56,8 @@ router.post(
     const payload = {
       user: {
         id: user.id,
+        name: user.name,
+        email: user.email,
       },
     };
 
@@ -65,7 +67,7 @@ router.post(
       { expiresIn: '1h' },
       (err, token) => {
         if (err) throw err;
-        res.json({ token });
+        res.json({ token, user: payload.user });
       }
     );
   } catch (err) {
