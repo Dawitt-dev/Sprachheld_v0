@@ -18,8 +18,6 @@ SprachHeld is an interactive language learning application designed to make lear
 
 - **Frontend**: React.js, Axios, React Router
 - **Backend**: Node.js, Express.js, MongoDB, JWT Authentication
-- **APIs**: Google Translate API, Forvo API, OpenAI GPT-3 API
-- **Deployment**: Heroku (Backend), Netlify (Frontend)
 
 ## Getting Started
 
