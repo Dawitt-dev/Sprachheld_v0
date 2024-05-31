@@ -1,6 +1,6 @@
 # SprachHeld - Fun German Grammar Mastery 🇩🇪
 
-![SprachHeld Logo](https://example.com/logo.png)
+![SprachHeld Logo](https://github.com/Dawitt-dev/logo/blob/main/Sprachheld.png)
 
 ## Introduction
 
