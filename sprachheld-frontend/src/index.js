@@ -11,6 +11,7 @@ import Exercises from './components/Exercises';
 import ExerciseDetail from './components/ExerciseDetail';
 import Profile from './components/Profile';
 import './index.css';
+import './App.css';
 import reportWebVitals from './reportWebVitals';
 import { AuthProvider } from './AuthContext';
 
