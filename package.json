@@ -1,7 +1,17 @@
 {
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "homepage": "https://github.com/Dawitt-dev/Sprachheld_v0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.4.0"
+  },
+  "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
+    "build": "react-scripts build"
+  },
+  "devDependencies": {
+    "gh-pages": "^6.1.1",
+    "react-scripts": "^5.0.1"
   }
 }

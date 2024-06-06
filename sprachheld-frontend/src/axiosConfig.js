@@ -2,7 +2,7 @@ import axios from 'axios'
 
 // Create an axios instance
 const axiosInstance = axios.create({
-    baseURL: 'https://fuzzy-pancake-r9j76g9vp6x2xg7v-5000.app.github.dev/api',
+    baseURL: "http://localhost:5000/api",
 });
 // Interceptor to include token in headers
 axiosInstance.interceptors.request.use((config) => {

@@ -14,7 +14,7 @@ connectDB();
 // Middleware
 app.use(express.json({ extended: false }));
 app.use(cors({
-    origin: 'https://fuzzy-pancake-r9j76g9vp6x2xg7v-3000.app.github.dev', // Frontend URL
+    origin: "http://localhost:3000",
     credentials: true,
 }));
 
