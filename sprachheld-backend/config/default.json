@@ -1,4 +1,4 @@
-
-[
-  "value": "10",
-]
+{
+  "mongoURI": "mongodb://localhost:27017/sprachheld",
+  "jwtSecret": "3Jd4S3sj$hec-amd3@e"
+}
