@@ -16,26 +16,30 @@ router.post(
     ],
     async (req, res) => {
         const errors = validationResult(req);
-        if (!errors.isEmpty()){
-        return res.status(400).json({ errors: errors.array() });
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
         }
-    
-        const { userId, exerciseId, status } = req.body;
+
+        const { userId, exerciseId, status, answers, currentQuestionIndex } = req.body;
 
         try {
             let userExercise = await UserExercise.findOne({ userId, exerciseId });
 
             if (userExercise) {
                 userExercise.status = status;
+                userExercise.answers = answers;
+                userExercise.currentQuestionIndex = currentQuestionIndex;
                 userExercise.date = Date.now();
                 await userExercise.save();
                 return res.json(userExercise);
             }
-            
+
             const newUserExercise = new UserExercise({
                 userId,
                 exerciseId,
                 status,
+                answers,
+                currentQuestionIndex
             });
 
             userExercise = await newUserExercise.save();
@@ -52,10 +56,12 @@ router.post(
 // @access   Private
 router.get('/', auth, async (req, res) => {
     const { userId } = req.query;
-    const query = userId ? { userId } : {};
+    if (!userId) {
+        return res.status(400).json({ msg: 'User ID is required' });
+    }
 
     try {
-        const userExercises = await UserExercise.find(query)
+        const userExercises = await UserExercise.find({ userId })
             .populate('userId', ['name'])
             .populate('exerciseId', ['title']);
         res.json(userExercises);
@@ -63,14 +69,16 @@ router.get('/', auth, async (req, res) => {
         console.error(err.message);
         res.status(500).send('Server Error');
     }
-});
+})
 
 // @route    GET /api/userExercises/:id
 // @desc     Get user exercise by ID
 // @access   Public
 router.get('/:id', auth, async (req, res) => {
     try {
-        const userExercise = await UserExercise.findById(req.params.id).populate('userId', ['name']).populate('exerciseId', ['title']);
+        const userExercise = await UserExercise.findById(req.params.id)
+            .populate('userId', ['name'])
+            .populate('exerciseId', ['title']);
 
         if (!userExercise) {
             return res.status(404).json({ msg: 'User Exercise not found' });

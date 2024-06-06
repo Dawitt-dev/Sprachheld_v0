@@ -4,6 +4,38 @@
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Document</title>
+    <style>
+        body, html, #root {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .exercise-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .exercise-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1em;
+        }
+        .exercise-buttons {
+            padding: 1em;
+            box-sizing: border-box;
+            background: #f9f9f9;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+  </head>
+  <body>
+    <div id="root" class="app-container">
     <meta name="theme-color" content="#000000" />
     <meta
       name="description"
@@ -25,7 +57,9 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>React App</title>
-  </head>
+    </div>
+    <script src="index.js"></script>
+  </body>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
@@ -39,5 +73,7 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+    
   </body>
+
 </html>

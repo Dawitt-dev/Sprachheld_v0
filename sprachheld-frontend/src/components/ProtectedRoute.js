@@ -2,11 +2,18 @@ import React, { useContext } from 'react';
 import { Navigate } from 'react-router-dom';
 import { AuthContext } from '../AuthContext';
 
-const ProtectedRoute = ({ children }) => {
-    const { user, loading } = useContext(AuthContext);
+const ProtectedRoute = ({ children, requiredStatus }) => {
+    const { user } = useContext(AuthContext);
 
-    if (loading) return <div>Loading...</div>;
-    if (!user) return <Navigate to="/login" replace />;
+    if (!user) {
+        return <Navigate to="/login" />;
+    }
+
+    if (requiredStatus) {
+        const userProgress = user.exercises || [];
+        const hasAccess = userProgress.some(ex => ex.status === requiredStatus);
+        return hasAccess ? children : <Navigate to="/exercises" />;
+    }
 
     return children;
 };

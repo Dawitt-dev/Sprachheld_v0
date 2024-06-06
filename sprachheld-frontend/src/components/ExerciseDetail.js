@@ -1,128 +1,115 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import axios from '../axiosConfig';
-import { AuthContext } from '../AuthContext';
 
 const ExerciseDetail = () => {
     const { id } = useParams();
-    const { user } = useContext(AuthContext);
-    const [exercise, setExercise] = useState({});
+    const [exercise, setExercise] = useState(null);
     const [answers, setAnswers] = useState({});
     const [feedback, setFeedback] = useState({});
-    const [message, setMessage] = useState('');
-    const navigate = useNavigate();
+    const [allcorrect, setAllcorrect] = useState(false);
 
-    useEffect(() => {
-        if (!user) {
-            navigate('/login');
-            return;
-        }
-
-        const fetchExercise = async () => {
-            try {
-                const res = await axios.get(`/exercises/${id}`);
-                setExercise(res.data);
-                const savedAnswers = await fetchSavedAnswers(id);
-                setAnswers(savedAnswers);
-            } catch (err) {
-                console.error('Error fetching exercise', err);
-            }
-        };
-        fetchExercise();
-    }, [id, user, navigate]);
-
-    const fetchSavedAnswers = async (exerciseId) => {
+    const fetchExercise = async () => {
         try {
-            const res = await axios.get(`/userExercises/${exerciseId}`);
-            if (res.data && res.data.answers) {
-                return res.data.answers;
-            }
+            const res = await axios.get(`/exercises/${id}`);
+            setExercise(res.data);
         } catch (err) {
-            console.error('Error fetching saved answers', err);
+            console.error('Error fetching exercise', err);
         }
-        return {};
     };
 
-    const handleChange = (questionId, value) => {
-        setAnswers(prevAnswers => {
-            const newAnswers = { ...prevAnswers, [questionId]: value };
-            saveProgress(newAnswers);
-            return newAnswers;
+    const handleAnswerChange = (questionId, answer) => {
+        setAnswers({
+            ...answers,
+            [questionId]: answer,
         });
     };
 
-    const saveProgress = async (newAnswers) => {
+    const handleSave = async () => {
         try {
-            await axios.post(`/userExercises/${id}/save`, {
-                userId: user._id,
+            const userId = localStorage.getItem('userId'); // Assume userId is stored in localStorage
+            await axios.post('/userExercises', {
+                userId,
                 exerciseId: id,
-                answers: newAnswers,
+                answers,
+                status: 'in-progress',
             });
+            alert('Answers saved successfully!');
         } catch (err) {
-            console.error('Error saving progress', err);
+            console.error('Error saving answers', err);
+            alert('Failed to save answers.');
         }
     };
 
     const handleSubmit = async () => {
-        let allCorrect = true;
-        const newFeedback = {};
+        let newFeedback = {};
+        let allAnswerscorrect = true;
 
         exercise.questions.forEach((question) => {
-            if (answers[question._id] === question.correctOption) {
-                newFeedback[question._id] = 'Correct';
-            } else {
-                newFeedback[question._id] = 'Try again';
-                allCorrect = false;
+            const isCorrect = answers[question._id] === question.correctOption;
+            newFeedback[question._id] = isCorrect ? 'correct' : 'incorrect';
+            if (!isCorrect) {
+                allAnswerscorrect = false;
             }
         });
-
         setFeedback(newFeedback);
+        setAllcorrect(allAnswerscorrect);
 
-        if (allCorrect) {
-            setMessage('Exercise completed successfully');
-            await updateExerciseStatus('completed');
-        } else {
-            setMessage('Exercise in progress. Please correct the wrong answers.');
-            await updateExerciseStatus('in-progress');
-        }
-    };
-
-    const updateExerciseStatus = async (status) => {
         try {
-            await axios.post(`/exercises/${id}/submit`, {
-                userId: user._id,
+            const userId = localStorage.getItem('userId'); // Assume userId is stored in localStorage
+            await axios.post('/userExercises', {
+                userId,
                 exerciseId: id,
-                status,
+                answers,
+                status: allAnswerscorrect ? 'completed' : 'in-progress',
             });
+            alert('Answers submitted successfully!');
         } catch (err) {
-            console.error('Error updating exercise status', err);
+            console.error('Error submitting answers', err);
+            alert('Failed to submit answers.');
         }
     };
+
+    useEffect(() => {
+        fetchExercise();
+    }, [id]);
 
     return (
-        <div>
-            <h2>{exercise.title}</h2>
-            <p>{exercise.description}</p>
-            {exercise.questions && exercise.questions.map((question) => (
-                <div key={question._id}>
-                    <p>{question.text}</p>
-                    {question.options.map((option, index) => (
-                        <div key={index}>
-                            <input
-                                type="radio"
-                                name={question._id}
-                                value={option}
-                                checked={answers[question._id] === option}
-                                onChange={(e) => handleChange(question._id, e.target.value)}
-                            />
-                            {option}
-                        </div>
-                    ))}
-                    {feedback[question._id] && <p>{feedback[question._id]}</p>}
-                </div>
-            ))}
-            <button onClick={handleSubmit}>Submit</button>
-            {message && <p>{message}</p>}
+        <div className="exercise-container">
+            <div className="exercise-content">
+                {exercise && (
+                    <div>
+                        <h2>{exercise.title}</h2>
+                        <p>{exercise.description}</p>
+                        {exercise.questions.map((question) => (
+                            <div key={question._id}>
+                                <p>{question.text}</p>
+                                {question.options.map((option) => (
+                                    <div key={option}>
+                                        <input
+                                            type="radio"
+                                            name={question._id}
+                                            value={option}
+                                            checked={answers[question._id] === option}
+                                            onChange={() => handleAnswerChange(question._id, option)}
+                                        />
+                                        {option}
+                                    </div>
+                                ))}
+                                {feedback[question._id] !== undefined && (
+                                    <p>
+                                        {feedback[question._id] ? 'Correct!' : 'Try again.'}
+                                    </p>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+            <div className="exercise-buttons">
+                <button onClick={handleSave}>Save</button>
+                <button onClick={handleSubmit}>Submit</button>
+            </div>
         </div>
     );
 };

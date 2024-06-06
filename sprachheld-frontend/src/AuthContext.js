@@ -16,6 +16,7 @@ const AuthProvider = ({ children }) => {
                 try {
                     const response = await axios.get('/auth');
                     setUser(response.data);
+                    localStorage.setItem('userId', response.data._id);
                 } catch (error) {
                     console.log('Error checking auth', error);
                     localStorage.removeItem('token');
@@ -31,6 +32,8 @@ const AuthProvider = ({ children }) => {
             const response = await axios.post('/auth', { email, password });
             localStorage.setItem('token', response.data.token);
             setUser(response.data.user);
+            localStorage.setItem('userId', response.data.user.id);
+            setUser(response.data.user);
             navigate('/profile');
         } catch (error) {
             console.error('Error logging in', error);
@@ -41,6 +44,7 @@ const AuthProvider = ({ children }) => {
 
     const logout = () => {
         localStorage.removeItem('token');
+        localStorage.removeItem('userId');
         setUser(null);
         navigate('/login');
     }
