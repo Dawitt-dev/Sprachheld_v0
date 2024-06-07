@@ -1,7 +1,7 @@
 {
   "name": "sprachheld-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "this is the back end",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
