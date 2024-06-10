@@ -14,7 +14,7 @@ connectDB();
 // Middleware
 app.use(express.json({ extended: false }));
 app.use(cors({
-    origin: "http://localhost:3000",
+    origin: "hammerhead-app-mu3qu.ondigitalocean.app:3000",
     credentials: true,
 }));
 
