@@ -3,7 +3,7 @@ import axios from 'axios'
 // Create an axios instance
 const axiosInstance = axios.create({
     baseURL: process.env.NODE_ENV === 'production'
-    ? 'https://shark-app-wl983.ondigitalocean.app'
+    ? 'https://shark-app-wl983.ondigitalocean.app:5000/api'
     : 'http://localhost:5000/api',
 });
 // Interceptor to include token in headers
