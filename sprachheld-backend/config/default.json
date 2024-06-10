@@ -1,4 +1,4 @@
 {
-  "mongoURI": "mongodb+srv://Dawitt-dev:Wishmy4ever%40sprachheld.rjxlhah.mongodb.net/?retryWrites=true&w=majority&appName=SprachHeld",
+  "mongoURI": "mongodb+srv://sprachmaster-97ce377c.mongo.ondigitalocean.com",
   "jwtSecret": "3Jd4S3sj$hec-amd3@e"
 }
