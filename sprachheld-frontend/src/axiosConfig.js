@@ -2,7 +2,9 @@ import axios from 'axios'
 
 // Create an axios instance
 const axiosInstance = axios.create({
-    baseURL: "https://shark-app-wl983.ondigitalocean.app:5000/api"
+    baseURL: process.env.NODE_ENV === 'production'
+    ? 'https://shark-app-w1983.ondigitalocean.app' // replace with your actual backend URL
+    : 'http://localhost:5000'
     
 });
 // Interceptor to include token in headers
