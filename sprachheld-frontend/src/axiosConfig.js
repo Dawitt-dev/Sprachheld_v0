@@ -7,6 +7,9 @@ const axiosInstance = axios.create({
     : 'http://localhost:5000/api'
     
 });
+// Log the base URL being used
+console.log('Base URL:', axiosInstance.defaults.baseURL);
+
 // Interceptor to include token in headers
 axiosInstance.interceptors.request.use((config) => {
     const token = localStorage.getItem('token');
