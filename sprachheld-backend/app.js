@@ -6,17 +6,17 @@ const mongoose = require('mongoose');
 const c = require('config');
 const app = express();
 const cors = require('cors');
-
+//const port = 5000;
 
 // Connect to MongoDB
 connectDB();
-
+app.use(cors());
 // Middleware
 app.use(express.json({ extended: false }));
-app.use(cors({
-    origin: "https://hammerhead-app-mu3qu.ondigitalocean.app",
-    credentials: true,
-}));
+//app.use(cors({
+//	origin: "https://159.89.7.100:3000",
+  //  credentials: true,
+//}));
 
 
 
@@ -33,4 +33,4 @@ app.use('/api/userExercises', require('./routes/userExercises'));
 
 // Start server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(5000, () => console.log(`Server running on port 5000`));

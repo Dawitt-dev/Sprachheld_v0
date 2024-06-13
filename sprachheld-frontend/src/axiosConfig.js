@@ -1,10 +1,12 @@
 import axios from 'axios'
 
 // Create an axios instance
-const axiosInstance = axios.create({
-    baseURL: "https://shark-app-w1983.ondigitalocean.app/api",
-    
-});
+   const axiosInstance = axios.create({
+  baseURL: process.env.NODE_ENV === 'production'
+    ? 'http://159.89.7.100:5000/api'
+    : 'http://localhost:5000/api',
+}); 
+
 // Log the base URL being used
 console.log('Base URL:', axiosInstance.defaults.baseURL);
 

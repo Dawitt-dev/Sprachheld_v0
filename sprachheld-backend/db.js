@@ -5,7 +5,9 @@ const mongoose = require('mongoose');
 const connectDB = async () => {
   try {
     // Attempt to connect to MongoDB using mongoose.connect()
-    await mongoose.connect('mongodb+srv://sprachmaster-97ce377c.mongo.ondigitalocean.com', {   
+    await mongoose.connect('mongodb+srv://doadmin:BK17A2IT9805onz3@sprachmaster-97ce377c.mongo.ondigitalocean.com', { 
+	    useNewUrlParser: true,
+	    useUnifiedTopology: true,
     });
     // Log a success message if the connection is established
     console.log('MongoDB connected...');

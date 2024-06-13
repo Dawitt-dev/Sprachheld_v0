@@ -1,4 +1,4 @@
 {
-  "mongoURI": "mongodb+srv://sprachmaster-97ce377c.mongo.ondigitalocean.com",
+  "mongoURI": "mongodb+srv://doadmin:BK17A2IT9805onz3@sprachmaster-97ce377c.mongo.ondigitalocean.com",
   "jwtSecret": "3Jd4S3sj$hec-amd3@e"
   }
